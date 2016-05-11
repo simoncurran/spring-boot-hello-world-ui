@@ -1,0 +1,12 @@
+[
+    {
+        "accountId": 1,
+        "accountName": "Simons Account",
+        "accountNumber": "GDN-0011"
+    },
+    {
+        "accountId": 2,
+        "accountName": "Nialls Account",
+        "accountNumber": "NAL-0022"    
+    }
+]

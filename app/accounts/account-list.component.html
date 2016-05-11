@@ -1,0 +1,52 @@
+<div class='panel panel-primary'>
+    <div class='panel-heading'>
+        Account List
+    </div>
+    <!-- Filter the Accounts   -->
+    <div class='panel-body'>
+        <div class='row'>
+            <div class='col-md-12'>
+                Filter by:<br>
+                <input type='text' [(ngModel)]='listFilter' />
+            </div>
+        </div>
+        <div class='row' *ngIf='listFilter'>
+            <div class='col-md-6'>
+                <h3>Filtered by: {{listFilter}} </h3>
+            </div>
+        </div>
+
+        <div class='has-error' *ngIf='errorMessage'>{{errorMessage}}</div>
+
+        <div class='table-responsive'>
+            <table class='table' *ngIf='accounts && accounts.length'>
+                <thead>
+                    <tr>
+                        <th>Account ID</th>
+                        <th>Account Name</th>
+                        <th>Account Number</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>                   
+                    <tr *ngFor='#account of accounts | accountNameFilter:listFilter'>
+                        <td>
+                            <!-- /AccountDetail route must be defined in the @RouteConfig in app.component.ts -->
+                            <a [routerLink]="['/AccountDetail', {id: account.accountId}]">
+                                {{account.accountId}}
+                            </a>
+                        </td> 
+                        <td>{{ account.accountName }}</td>
+                        <td>{{ account.accountNumber | lowercase }}</td>
+                        <td><a class='btn btn-default' (click)='onDelete(account.accountId)' style='width:100px'>Delete</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class='panel-footer'>
+            <a class='btn btn-default' (click)='onNew()' style='width:80px'>
+                New
+            </a>
+        </div>                
+    </div>    
+</div>
