@@ -24,26 +24,47 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable'], function(
                 Observable_1 = Observable_1_1;
             }],
         execute: function() {
+            /**
+             * You must define this service as a 'provider' in app.component.js.
+             */
             AppConfiguration = (function () {
                 function AppConfiguration(_http) {
                     this._http = _http;
-                    this._configUrl = 'config/config.json';
+                    this._configUrl = 'app/config/config.json';
+                    this.getConfigValues();
                 }
                 AppConfiguration.prototype.getConfigValue = function (key) {
-                    console.log(">>> getConfigValue");
+                    console.log(">>> getConfigValue : key=" + key + ", configObject=" + JSON.stringify(this._configObject));
                     var result;
                     if (key != undefined) {
                         result = this._configObject.get(key);
                     }
+                    console.log("<<< getConfigValue : result=" + result);
                     return result;
                 };
-                AppConfiguration.prototype.ngOnInit = function () {
+                AppConfiguration.prototype.getConfigValues = function () {
                     var _this = this;
-                    console.log(">>> ngOnInit : _configUrl=" + this._configUrl);
+                    console.log(">>> getConfigValues : _configUrl=" + this._configUrl);
                     this._http.get(this._configUrl)
                         .map(function (response) { return response.json(); })
-                        .do(function (data) { return _this._configObject = data; })
-                        .catch(this.handleError);
+                        .do(function (data) {
+                        _this._configObject = _this.jsonObjectToMap(data);
+                        console.log("configObject=" + _this._configObject);
+                    })
+                        .catch(this.handleError)
+                        .subscribe();
+                };
+                AppConfiguration.prototype.jsonObjectToMap = function (jsonObject) {
+                    console.log("jsonObjectToMap : jsonObject=" + jsonObject);
+                    var result = new Map();
+                    for (var key in jsonObject) {
+                        if (jsonObject.hasOwnProperty(key)) {
+                            console.log(key, jsonObject[key]);
+                            result.set(key, jsonObject[key]);
+                        }
+                    }
+                    console.log("jsonToMap : result=" + result);
+                    return result;
                 };
                 AppConfiguration.prototype.handleError = function (error) {
                     console.error(error);

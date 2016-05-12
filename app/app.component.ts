@@ -5,6 +5,7 @@ import { ROUTER_PROVIDERS, RouteConfig, ROUTER_DIRECTIVES } from 'angular2/route
 
 import { AccountListComponent } from './accounts/account-list.component';
 import { AccountService } from './accounts/account.service';
+import { AppConfiguration } from './app.configuration';
 import { WelcomeComponent } from './home/welcome.component';
 import { AccountDetailComponent } from './accounts/account-detail.component';
 
@@ -28,12 +29,13 @@ import { AccountDetailComponent } from './accounts/account-detail.component';
      `,
     directives: [ROUTER_DIRECTIVES],
     providers: [AccountService,
+                AppConfiguration,
                 HTTP_PROVIDERS,
                 ROUTER_PROVIDERS]
 })
 @RouteConfig([
     { path: '/welcome', name: 'Welcome', component: WelcomeComponent, useAsDefault: true },
-    { path: '/accounts', name: 'Accounts', component: AccountListComponent }
+    { path: '/accounts', name: 'Accounts', component: AccountListComponent },
     { path: '/accountDetail', name: 'AccountDetail', component: AccountDetailComponent }
 ])
 export class AppComponent {

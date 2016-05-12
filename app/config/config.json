@@ -1,5 +1,4 @@
 {
-    "account.service.base.url": "localhost:8080" 
-{
-    "account.service.base.url": "http://localhost:8080" 
+    "account.service.base.url": "localhost:8080",
+    "another.key": "another.value"
 }

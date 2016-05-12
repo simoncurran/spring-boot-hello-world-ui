@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/http', 'rxjs/Observable'], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/http', 'rxjs/Observable', '../app.configuration'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable'], function(
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, http_1, Observable_1;
+    var core_1, http_1, Observable_1, app_configuration_1;
     var AccountService;
     return {
         setters:[
@@ -22,21 +22,29 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable'], function(
             },
             function (Observable_1_1) {
                 Observable_1 = Observable_1_1;
+            },
+            function (app_configuration_1_1) {
+                app_configuration_1 = app_configuration_1_1;
             }],
         execute: function() {
+            /**
+             * You must define this service as a 'provider' in app.component.js.
+             */
             AccountService = (function () {
-                function AccountService(_http) {
+                function AccountService(_configuration, _http) {
+                    this._configuration = _configuration;
                     this._http = _http;
                     this._accountUrl = 'http://localhost:8080/accounts'; // api/accounts/accounts.json';
                 }
                 AccountService.prototype.getAccounts = function () {
-                    console.log(">>> getAccounts");
+                    console.log(">>> getAccounts : url=" + this._accountUrl);
                     return this._http.get(this._accountUrl)
                         .map(function (response) { return response.json(); })
                         .do(function (data) { return console.log('All Accounts retrieved successfully.'); })
                         .catch(this.handleError);
                 };
                 AccountService.prototype.getAccount = function (id) {
+                    console.log("account.service.base.url=" + this._configuration.getConfigValue("account.service.base.url"));
                     console.log(">>> getAccount");
                     if (id > 0) {
                         var url = this._accountUrl + "/" + id;
@@ -95,7 +103,7 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable'], function(
                 };
                 AccountService = __decorate([
                     core_1.Injectable(), 
-                    __metadata('design:paramtypes', [http_1.Http])
+                    __metadata('design:paramtypes', [app_configuration_1.AppConfiguration, http_1.Http])
                 ], AccountService);
                 return AccountService;
             }());

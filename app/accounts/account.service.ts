@@ -4,14 +4,21 @@ import { Observable } from 'rxjs/Observable';
 
 import { IAccount } from './account';
 
+import { AppConfiguration } from '../app.configuration';
+
+/**
+ * You must define this service as a 'provider' in app.component.js.
+ */
 @Injectable()
 export class AccountService {
     private _accountUrl = 'http://localhost:8080/accounts'; // api/accounts/accounts.json';
 
-    constructor(private _http: Http) { }
+    constructor(
+        private _configuration: AppConfiguration,
+        private _http: Http) { }
 
-    getAccounts(): Observable<IAccount[]> {
-        console.log(">>> getAccounts");
+    getAccounts(): Observable<IAccount[]> {        
+        console.log(">>> getAccounts : url=" + this._accountUrl);
         return this._http.get(this._accountUrl)
             .map((response: Response) => <IAccount[]> response.json())
             .do(data => console.log('All Accounts retrieved successfully.'))
@@ -19,6 +26,7 @@ export class AccountService {
     }
 
     getAccount(id: number): Observable<IAccount> {
+        console.log("account.service.base.url=" + this._configuration.getConfigValue("account.service.base.url"));
         console.log(">>> getAccount");
         if (id > 0) { 
             let url = this._accountUrl  + "/" + id;
