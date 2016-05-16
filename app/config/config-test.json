@@ -1,5 +1,4 @@
 {
-    "url": "localhost:8080",
-{
-    "account.service.base.url": "localhost:8080" 
+    "account.service.base.url": "http://springboothelloworldrestaws-test-simoncurran.boxfuse.io:8080",
+    "another.key": "another.value"
 }

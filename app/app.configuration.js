@@ -31,28 +31,26 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable'], function(
                 function AppConfiguration(_http) {
                     this._http = _http;
                     this._configUrl = 'app/config/config.json';
+                    this._isInitialized = false;
                     this.getConfigValues();
                 }
                 AppConfiguration.prototype.getConfigValue = function (key) {
-                    console.log(">>> getConfigValue : key=" + key + ", configObject=" + JSON.stringify(this._configObject));
+                    console.log(">>> getConfigValue : key=" + key);
                     var result;
-                    if (key != undefined) {
-                        result = this._configObject.get(key);
-                    }
-                    console.log("<<< getConfigValue : result=" + result);
-                    return result;
+                    return this.getConfigValues().map(function (data) { return result = data.get(key); });
                 };
                 AppConfiguration.prototype.getConfigValues = function () {
                     var _this = this;
                     console.log(">>> getConfigValues : _configUrl=" + this._configUrl);
-                    this._http.get(this._configUrl)
+                    var result = null;
+                    return this._http.get(this._configUrl)
                         .map(function (response) { return response.json(); })
                         .do(function (data) {
-                        _this._configObject = _this.jsonObjectToMap(data);
-                        console.log("configObject=" + _this._configObject);
+                        result = Observable_1.Observable.of(_this.jsonObjectToMap(data));
+                        console.log("result=" + result);
+                        _this._isInitialized = true;
                     })
-                        .catch(this.handleError)
-                        .subscribe();
+                        .catch(this.handleError);
                 };
                 AppConfiguration.prototype.jsonObjectToMap = function (jsonObject) {
                     console.log("jsonObjectToMap : jsonObject=" + jsonObject);

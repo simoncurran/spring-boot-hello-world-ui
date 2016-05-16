@@ -11,15 +11,16 @@ import { AppConfiguration } from '../app.configuration';
  */
 @Injectable()
 export class AccountService {
-    private _accountUrl = 'http://localhost:8080/accounts'; // api/accounts/accounts.json';
+    
+    //private _accountUrl = 'http://localhost:8080' + 'accounts'; // api/accounts/accounts.json';
 
     constructor(
         private _configuration: AppConfiguration,
         private _http: Http) { }
 
     getAccounts(): Observable<IAccount[]> {        
-        console.log(">>> getAccounts : url=" + this._accountUrl);
-        return this._http.get(this._accountUrl)
+        console.log(">>> getAccounts : url=" + this.getAccountServiceBaseURL());
+        return this._http.get(this.getAccountServiceBaseURL())
             .map((response: Response) => <IAccount[]> response.json())
             .do(data => console.log('All Accounts retrieved successfully.'))
             .catch(this.handleError);
@@ -29,7 +30,7 @@ export class AccountService {
         console.log("account.service.base.url=" + this._configuration.getConfigValue("account.service.base.url"));
         console.log(">>> getAccount");
         if (id > 0) { 
-            let url = this._accountUrl  + "/" + id;
+            let url = this.getAccountServiceBaseURL()  + "/" + id;
             console.log("url=" + url);
             return this._http.get(url)
                 .map((response: Response) => <IAccount> response.json())
@@ -43,7 +44,7 @@ export class AccountService {
         let headers = new Headers({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin' : '*' });
         let options = new RequestOptions({ headers: headers });
         if (account.accountId != undefined) {
-            let url = this._accountUrl  + "/" + account.accountId;
+            let url = this.getAccountServiceBaseURL()  + "/" + account.accountId;
             console.log("Updating existing Account : url=" + url);            
             return this._http.put(url, JSON.stringify(account), options)
                 .map((response: Response) => <IAccount> response.json())
@@ -53,7 +54,7 @@ export class AccountService {
         else {
             let sAccount: string = JSON.stringify(account);
             console.log("Creating new Account : account=" + sAccount);
-            return this._http.post(this._accountUrl, sAccount, options)
+            return this._http.post(this.getAccountServiceBaseURL(), sAccount, options)
                 .map((response: Response) => <IAccount> response.json())
                 .do(data => console.log('Create result: ' +  JSON.stringify(data)))
                 .catch(this.handleError);            
@@ -65,7 +66,7 @@ export class AccountService {
         let headers = new Headers({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin' : '*' });
         let options = new RequestOptions({ headers: headers });
         if (id != undefined) {
-            let url = this._accountUrl  + "/" + id;
+            let url = this.getAccountServiceBaseURL()  + "/" + id;
             console.log("Deleting existing Account : url=" + url);            
             return this._http.delete(url, options)
                 .do(data => console.log('Delete result: ' +  JSON.stringify(data)))
@@ -86,5 +87,15 @@ export class AccountService {
         }
         let body = res.json();
         return body.data || { };
-    }    
+    }  
+    
+    private getAccountServiceBaseURL(): string {
+        let result: string;
+        this._configuration.getConfigValue("account.service.base.url").subscribe(
+            data => result = data,
+            error => {},
+            () => {console.log("getAccountServiceBaseURL callback : result=" + result)}
+            );            
+        return result + "/accounts";
+    }
 }

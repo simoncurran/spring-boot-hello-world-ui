@@ -1,6 +1,7 @@
 import { Injectable, Component, OnInit } from 'angular2/core';
 import { Http, Response, Headers, RequestOptions } from 'angular2/http';
 import { Observable } from 'rxjs/Observable';
+import { Subject, Subscription } from 'rxjs/Rx.d';
 
 /**
  * You must define this service as a 'provider' in app.component.js.
@@ -10,32 +11,31 @@ export class AppConfiguration {
     
     private _configUrl = 'app/config/config.json';
     
-    private _configObject: Map<string, string>;
+    private _configObject: Observable<Map<string, string>>;
+    
+    private _isInitialized: boolean = false;
 
     constructor(private _http: Http) { 
         this.getConfigValues();
     }
 
-    getConfigValue(key: string): string {
-        console.log(">>> getConfigValue : key=" + key + ", configObject=" + JSON.stringify(this._configObject));
-        let result;
-        if (key != undefined) { 
-            result = this._configObject.get(key);            
-        }       
-        console.log("<<< getConfigValue : result=" + result);
-        return result;
+    getConfigValue(key: string): Observable<string> {
+        console.log(">>> getConfigValue : key=" + key);
+        let result: string;
+        return this.getConfigValues().map(data => result = data.get(key));
     }
     
-    private getConfigValues(): void {
+    private getConfigValues(): Observable<Map<string, string>> {
         console.log(">>> getConfigValues : _configUrl=" + this._configUrl);
-        this._http.get(this._configUrl)
+        let result: Observable<Map<string, string>> = null;
+        return this._http.get(this._configUrl)
             .map((response: Response) => response.json())
             .do(data => {
-                this._configObject = this.jsonObjectToMap(data);
-                console.log("configObject=" + this._configObject);
+                result = Observable.of(this.jsonObjectToMap(data));                
+                console.log("result=" + result);
+                this._isInitialized = true;
             })
-            .catch(this.handleError)
-            .subscribe();
+            .catch(this.handleError);            
     }      
     
     private jsonObjectToMap(jsonObject): Map<string, string> {

@@ -31,14 +31,14 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable', '../app.co
              * You must define this service as a 'provider' in app.component.js.
              */
             AccountService = (function () {
+                //private _accountUrl = 'http://localhost:8080' + 'accounts'; // api/accounts/accounts.json';
                 function AccountService(_configuration, _http) {
                     this._configuration = _configuration;
                     this._http = _http;
-                    this._accountUrl = 'http://localhost:8080/accounts'; // api/accounts/accounts.json';
                 }
                 AccountService.prototype.getAccounts = function () {
-                    console.log(">>> getAccounts : url=" + this._accountUrl);
-                    return this._http.get(this._accountUrl)
+                    console.log(">>> getAccounts : url=" + this.getAccountServiceBaseURL());
+                    return this._http.get(this.getAccountServiceBaseURL())
                         .map(function (response) { return response.json(); })
                         .do(function (data) { return console.log('All Accounts retrieved successfully.'); })
                         .catch(this.handleError);
@@ -47,7 +47,7 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable', '../app.co
                     console.log("account.service.base.url=" + this._configuration.getConfigValue("account.service.base.url"));
                     console.log(">>> getAccount");
                     if (id > 0) {
-                        var url = this._accountUrl + "/" + id;
+                        var url = this.getAccountServiceBaseURL() + "/" + id;
                         console.log("url=" + url);
                         return this._http.get(url)
                             .map(function (response) { return response.json(); })
@@ -60,7 +60,7 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable', '../app.co
                     var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
                     var options = new http_1.RequestOptions({ headers: headers });
                     if (account.accountId != undefined) {
-                        var url = this._accountUrl + "/" + account.accountId;
+                        var url = this.getAccountServiceBaseURL() + "/" + account.accountId;
                         console.log("Updating existing Account : url=" + url);
                         return this._http.put(url, JSON.stringify(account), options)
                             .map(function (response) { return response.json(); })
@@ -70,7 +70,7 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable', '../app.co
                     else {
                         var sAccount = JSON.stringify(account);
                         console.log("Creating new Account : account=" + sAccount);
-                        return this._http.post(this._accountUrl, sAccount, options)
+                        return this._http.post(this.getAccountServiceBaseURL(), sAccount, options)
                             .map(function (response) { return response.json(); })
                             .do(function (data) { return console.log('Create result: ' + JSON.stringify(data)); })
                             .catch(this.handleError);
@@ -81,7 +81,7 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable', '../app.co
                     var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
                     var options = new http_1.RequestOptions({ headers: headers });
                     if (id != undefined) {
-                        var url = this._accountUrl + "/" + id;
+                        var url = this.getAccountServiceBaseURL() + "/" + id;
                         console.log("Deleting existing Account : url=" + url);
                         return this._http.delete(url, options)
                             .do(function (data) { return console.log('Delete result: ' + JSON.stringify(data)); })
@@ -100,6 +100,11 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable', '../app.co
                     }
                     var body = res.json();
                     return body.data || {};
+                };
+                AccountService.prototype.getAccountServiceBaseURL = function () {
+                    var result;
+                    this._configuration.getConfigValue("account.service.base.url").subscribe(function (data) { return result = data; }, function (error) { }, function () { console.log("getAccountServiceBaseURL callback : result=" + result); });
+                    return result + "/accounts";
                 };
                 AccountService = __decorate([
                     core_1.Injectable(), 
