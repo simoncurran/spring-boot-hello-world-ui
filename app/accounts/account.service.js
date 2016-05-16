@@ -102,8 +102,10 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable', '../app.co
                     return body.data || {};
                 };
                 AccountService.prototype.getAccountServiceBaseURL = function () {
-                    var result;
-                    this._configuration.getConfigValue("account.service.base.url").subscribe(function (data) { return result = data; }, function (error) { }, function () { console.log("getAccountServiceBaseURL callback : result=" + result); });
+                    var result = 'http://localhost:8080';
+                    var asyncResult = null;
+                    this._configuration.getConfigValue("account.service.base.url").subscribe(function (data) { return asyncResult = data; }, function (error) { }, function () { console.log("getAccountServiceBaseURL callback : asyncResult=" + asyncResult); });
+                    //return asyncResult + "/accounts";
                     return result + "/accounts";
                 };
                 AccountService = __decorate([

@@ -90,12 +90,14 @@ export class AccountService {
     }  
     
     private getAccountServiceBaseURL(): string {
-        let result: string;
+        let result: string = 'http://localhost:8080';
+        let asyncResult = null;
         this._configuration.getConfigValue("account.service.base.url").subscribe(
-            data => result = data,
+            data => asyncResult = data,
             error => {},
-            () => {console.log("getAccountServiceBaseURL callback : result=" + result)}
+            () => {console.log("getAccountServiceBaseURL callback : asyncResult=" + asyncResult)}
             );            
+        //return asyncResult + "/accounts";
         return result + "/accounts";
     }
 }
