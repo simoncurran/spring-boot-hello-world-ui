@@ -29,26 +29,37 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable'], function(
              */
             AppConfiguration = (function () {
                 function AppConfiguration(_http) {
+                    var _this = this;
                     this._http = _http;
                     this._configUrl = 'app/config/config.json';
                     this._isInitialized = false;
-                    this.getConfigValues();
+                    this.getConfigValues().subscribe(function (data) { return _this._configObject = data; });
                 }
+                // getConfigValue(key: string): Observable<string> {
+                //     console.log(">>> getConfigValue : url=" + this._configUrl);
+                //     return this.getConfigValues()
+                //         .map(data => data.get(key))
+                //         .do(data => console.log("<<< getConfigValue : result=" + data))
+                //         .catch(this.handleError); 
+                // }  
+                // private getConfigValues(): Observable<Map<string, string>> {
+                //     console.log(">>> getConfigValues : url=" + this._configUrl);
+                //     return this._http.get(this._configUrl)
+                //         .map((response: Response) => this.jsonObjectToMap(response.json()))
+                //         .do(data => console.log("<<< getConfigValues : result=" + data))
+                //         .catch(this.handleError);            
+                // } 
                 AppConfiguration.prototype.getConfigValue = function (key) {
                     console.log(">>> getConfigValue : key=" + key);
-                    var result;
-                    return this.getConfigValues().map(function (data) { return result = data.get(key); });
+                    return this._configObject.get(key);
                 };
                 AppConfiguration.prototype.getConfigValues = function () {
                     var _this = this;
-                    console.log(">>> getConfigValues : _configUrl=" + this._configUrl);
-                    var result = null;
+                    console.log(">>> getConfigValues : url=" + this._configUrl);
                     return this._http.get(this._configUrl)
-                        .map(function (response) { return response.json(); })
+                        .map(function (response) { return _this.jsonObjectToMap(response.json()); })
                         .do(function (data) {
-                        result = Observable_1.Observable.of(_this.jsonObjectToMap(data));
-                        console.log("result=" + result);
-                        _this._isInitialized = true;
+                        console.log("<<< getConfigValues : result=" + data);
                     })
                         .catch(this.handleError);
                 };
@@ -61,7 +72,7 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable'], function(
                             result.set(key, jsonObject[key]);
                         }
                     }
-                    console.log("jsonToMap : result=" + result);
+                    console.log("jsonObjectToMap : result=" + result);
                     return result;
                 };
                 AppConfiguration.prototype.handleError = function (error) {

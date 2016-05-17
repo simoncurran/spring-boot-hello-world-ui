@@ -19,8 +19,8 @@ export class AccountService {
         private _http: Http) { }
 
     getAccounts(): Observable<IAccount[]> {        
-        console.log(">>> getAccounts : url=" + this.getAccountServiceBaseURL());
-        return this._http.get(this.getAccountServiceBaseURL())
+        console.log(">>> getAccounts : url=" + this.getAccountServiceURL());
+        return this._http.get(this.getAccountServiceURL())
             .map((response: Response) => <IAccount[]> response.json())
             .do(data => console.log('All Accounts retrieved successfully.'))
             .catch(this.handleError);
@@ -30,7 +30,7 @@ export class AccountService {
         console.log("account.service.base.url=" + this._configuration.getConfigValue("account.service.base.url"));
         console.log(">>> getAccount");
         if (id > 0) { 
-            let url = this.getAccountServiceBaseURL()  + "/" + id;
+            let url = this.getAccountServiceURL()  + "/" + id;
             console.log("url=" + url);
             return this._http.get(url)
                 .map((response: Response) => <IAccount> response.json())
@@ -44,7 +44,7 @@ export class AccountService {
         let headers = new Headers({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin' : '*' });
         let options = new RequestOptions({ headers: headers });
         if (account.accountId != undefined) {
-            let url = this.getAccountServiceBaseURL()  + "/" + account.accountId;
+            let url = this.getAccountServiceURL()  + "/" + account.accountId;
             console.log("Updating existing Account : url=" + url);            
             return this._http.put(url, JSON.stringify(account), options)
                 .map((response: Response) => <IAccount> response.json())
@@ -54,7 +54,7 @@ export class AccountService {
         else {
             let sAccount: string = JSON.stringify(account);
             console.log("Creating new Account : account=" + sAccount);
-            return this._http.post(this.getAccountServiceBaseURL(), sAccount, options)
+            return this._http.post(this.getAccountServiceURL(), sAccount, options)
                 .map((response: Response) => <IAccount> response.json())
                 .do(data => console.log('Create result: ' +  JSON.stringify(data)))
                 .catch(this.handleError);            
@@ -66,7 +66,7 @@ export class AccountService {
         let headers = new Headers({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin' : '*' });
         let options = new RequestOptions({ headers: headers });
         if (id != undefined) {
-            let url = this.getAccountServiceBaseURL()  + "/" + id;
+            let url = this.getAccountServiceURL()  + "/" + id;
             console.log("Deleting existing Account : url=" + url);            
             return this._http.delete(url, options)
                 .do(data => console.log('Delete result: ' +  JSON.stringify(data)))
@@ -89,15 +89,9 @@ export class AccountService {
         return body.data || { };
     }  
     
-    private getAccountServiceBaseURL(): string {
-        let result: string = 'http://localhost:8080';
-        let asyncResult = null;
-        this._configuration.getConfigValue("account.service.base.url").subscribe(
-            data => asyncResult = data,
-            error => {},
-            () => {console.log("getAccountServiceBaseURL callback : asyncResult=" + asyncResult)}
-            );            
-        //return asyncResult + "/accounts";
-        return result + "/accounts";
+    private getAccountServiceURL(): string {        
+        return this._configuration.getConfigValue("account.service.base.url");
+            //.map(data => data + "/accounts")
+            //.do(data => console.log("getAccountServiceBaseURL callback : data=" + data)).returnValue()
     }
 }
