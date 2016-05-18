@@ -2,5 +2,5 @@
 /account-management-1.0.0.tgz
 /node_modules/
 /typings/
-/**/*.js
+/app/**/*.js
 /**/*.js.map
