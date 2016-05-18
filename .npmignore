@@ -1,6 +1,2 @@
 /.settings/
 /account-management-1.0.0.tgz
-/node_modules/
-/typings/
-/app/**/*.js
-/**/*.js.map
