@@ -102,9 +102,7 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable', '../app.co
                     return body.data || {};
                 };
                 AccountService.prototype.getAccountServiceURL = function () {
-                    return this._configuration.getConfigValue("account.service.base.url");
-                    //.map(data => data + "/accounts")
-                    //.do(data => console.log("getAccountServiceBaseURL callback : data=" + data)).returnValue()
+                    return this._configuration.getConfigValue("account.service.base.url") + "/accounts";
                 };
                 AccountService = __decorate([
                     core_1.Injectable(), 

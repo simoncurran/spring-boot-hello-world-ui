@@ -29,11 +29,11 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable'], function(
              */
             AppConfiguration = (function () {
                 function AppConfiguration(_http) {
-                    var _this = this;
                     this._http = _http;
                     this._configUrl = 'app/config/config.json';
                     this._isInitialized = false;
-                    this.getConfigValues().subscribe(function (data) { return _this._configObject = data; });
+                    // this.getConfigValues().subscribe(
+                    //     data => this._configObject = data); 
                 }
                 // getConfigValue(key: string): Observable<string> {
                 //     console.log(">>> getConfigValue : url=" + this._configUrl);
@@ -42,16 +42,11 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable'], function(
                 //         .do(data => console.log("<<< getConfigValue : result=" + data))
                 //         .catch(this.handleError); 
                 // }  
-                // private getConfigValues(): Observable<Map<string, string>> {
-                //     console.log(">>> getConfigValues : url=" + this._configUrl);
-                //     return this._http.get(this._configUrl)
-                //         .map((response: Response) => this.jsonObjectToMap(response.json()))
-                //         .do(data => console.log("<<< getConfigValues : result=" + data))
-                //         .catch(this.handleError);            
-                // } 
                 AppConfiguration.prototype.getConfigValue = function (key) {
                     console.log(">>> getConfigValue : key=" + key);
-                    return this._configObject.get(key);
+                    var result = this._configObject.get(key);
+                    console.log("<<< getConfigValue : result=" + result);
+                    return result;
                 };
                 AppConfiguration.prototype.getConfigValues = function () {
                     var _this = this;
@@ -59,10 +54,20 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable'], function(
                     return this._http.get(this._configUrl)
                         .map(function (response) { return _this.jsonObjectToMap(response.json()); })
                         .do(function (data) {
-                        console.log("<<< getConfigValues : result=" + data);
+                        _this._configObject = data;
+                        console.log("<<< getConfigValues : configObject=" + _this._configObject);
                     })
                         .catch(this.handleError);
                 };
+                // private getConfigValues(): Observable<Map<string, string>> {
+                //     console.log(">>> getConfigValues : url=" + this._configUrl);
+                //     return this._http.get(this._configUrl)
+                //         .map((response: Response) => this.jsonObjectToMap(response.json()))
+                //         .do(data => {
+                //             console.log("<<< getConfigValues : result=" + data)
+                //         })
+                //         .catch(this.handleError);            
+                // }          
                 AppConfiguration.prototype.jsonObjectToMap = function (jsonObject) {
                     console.log("jsonObjectToMap : jsonObject=" + jsonObject);
                     var result = new Map();

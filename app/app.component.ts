@@ -39,5 +39,10 @@ import { AccountDetailComponent } from './accounts/account-detail.component';
     { path: '/accountDetail', name: 'AccountDetail', component: AccountDetailComponent }
 ])
 export class AppComponent {
+    
     pageTitle: string = 'Account Management';
+    
+    constructor(private _configuration: AppConfiguration) { 
+        this._configuration.getConfigValues().subscribe(); 
+    }    
 }

@@ -41,8 +41,10 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Rx', 'angular2/router',
             }],
         execute: function() {
             AppComponent = (function () {
-                function AppComponent() {
+                function AppComponent(_configuration) {
+                    this._configuration = _configuration;
                     this.pageTitle = 'Account Management';
+                    this._configuration.getConfigValues().subscribe();
                 }
                 AppComponent = __decorate([
                     core_1.Component({
@@ -59,7 +61,7 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Rx', 'angular2/router',
                         { path: '/accounts', name: 'Accounts', component: account_list_component_1.AccountListComponent },
                         { path: '/accountDetail', name: 'AccountDetail', component: account_detail_component_1.AccountDetailComponent }
                     ]), 
-                    __metadata('design:paramtypes', [])
+                    __metadata('design:paramtypes', [app_configuration_1.AppConfiguration])
                 ], AppComponent);
                 return AppComponent;
             }());

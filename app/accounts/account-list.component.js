@@ -41,7 +41,7 @@ System.register(['angular2/core', 'angular2/router', './account.service', './acc
                 AccountListComponent.prototype.ngOnInit = function () {
                     var _this = this;
                     this._accountService.getAccounts()
-                        .subscribe(function (data) { return _this.accounts = data; }, function (error) { return _this.errorMessage = error; });
+                        .subscribe(function (data) { return _this.accounts = data; }, function (error) { return _this.errorMessage = error; }, function () { return console.log(">>> AccountListComponent.ngOnInit <<<"); });
                 };
                 AccountListComponent.prototype.onNew = function () {
                     console.log(">>> onNew");

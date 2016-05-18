@@ -28,7 +28,8 @@ export class AccountListComponent
         this._accountService.getAccounts()
             .subscribe(
                 data => this.accounts = data,
-                error =>  this.errorMessage = <any>error
+                error => this.errorMessage = <any>error,
+                () => console.log(">>> AccountListComponent.ngOnInit <<<")                
             );
     }
     
