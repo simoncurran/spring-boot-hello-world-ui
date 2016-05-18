@@ -43,6 +43,5 @@ export class AppComponent {
     pageTitle: string = 'Account Management';
     
     constructor(private _configuration: AppConfiguration) { 
-        this._configuration.getConfigValues().subscribe(); 
     }    
 }

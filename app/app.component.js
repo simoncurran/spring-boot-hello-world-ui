@@ -44,7 +44,6 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Rx', 'angular2/router',
                 function AppComponent(_configuration) {
                     this._configuration = _configuration;
                     this.pageTitle = 'Account Management';
-                    this._configuration.getConfigValues().subscribe();
                 }
                 AppComponent = __decorate([
                     core_1.Component({
