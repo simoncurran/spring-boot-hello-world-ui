@@ -5,8 +5,8 @@
     "description": "Package for the Account Management sample application",
     "scripts": {
         "//": "In Development Mode, see start command in package.json.local-changes", 
-        "start-prod": "node server.js",
-        "start": "concurrently \"npm run tsc:w\" \"npm run lite\" ",
+        "start": "node server.js",
+        "start-dev": "concurrently \"npm run tsc:w\" \"npm run lite\" ",
         "tsc": "tsc",
         "tsc:w": "tsc -w",
         "lint": "tslint ./app/**/*.ts -t verbose",
