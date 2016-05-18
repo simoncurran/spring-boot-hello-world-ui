@@ -2,6 +2,7 @@ if [ $# -eq 0 ]
   then
     echo "You must supply the environment to deploy to, e.g."
     echo "./doBoxfuseDeployAWS.sh {test|prod}"
+    exit
 fi
 
 env=$1
