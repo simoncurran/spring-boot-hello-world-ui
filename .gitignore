@@ -5,3 +5,4 @@
 /typings/
 /app/**/*.js
 /**/*.js.map
+/target/

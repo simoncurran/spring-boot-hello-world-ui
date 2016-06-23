@@ -31,10 +31,27 @@ In AWS:
 To run server using node, passing environment name, and port as environment variables
 -------------------------------------------------------------------------------------
 
-BOXFUSE_ENV=test PORT=8080 node server.js
+BOXFUSE_ENV=dev PORT=8080 node server.js
 
 
 Required Packages
 -----------------
 
 npm install typings --global
+
+
+To Deploy to AWS Elastic Beanstalk using CLI
+--------------------------------------------
+
+AWS Instructions
+http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3.html
+
+Install EB CLI
+http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install.html
+
+# Initialize
+eb init
+
+# Create environment
+eb create
+
