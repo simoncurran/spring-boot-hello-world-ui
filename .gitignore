@@ -6,3 +6,4 @@
 /app/**/*.js
 /**/*.js.map
 /target/
+/npm-debug.log
